@@ -12,8 +12,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const maxConcurrency = 99 // Aumenta el número de gorutinas concurrentes
-const batchSize = 1000    // Tamaño del lote para inserciones en transacciones
+const maxConcurrency = 800 // Aumenta el número de gorutinas concurrentes
+const batchSize = 1000     // Tamaño del lote para inserciones en transacciones
 
 func test(c *gin.Context) {
 	c.IndentedJSON(200, gin.H{
@@ -72,7 +72,7 @@ func uploadFile(c *gin.Context) {
 	for i := 0; i < maxConcurrency; i++ {
 		wg.Add(1)
 		go func() {
-			defer wg.Done()
+			defer wg.Done() // we are done when the function finishes, this is important to avoid deadlocks
 			for row := range rowChan {
 				processRow(row, &insertedProductsCount, mu, sem)
 			}
@@ -168,4 +168,75 @@ func parseInt(s string) int {
 	var i int
 	fmt.Sscanf(s, "%d", &i)
 	return i
+}
+
+func processBatch(batch [][]string, insertedProductsCount *int, mu *sync.Mutex, sem chan struct{}) {
+	sem <- struct{}{}
+	defer func() { <-sem }()
+
+	for _, row := range batch {
+		processRow2(row, insertedProductsCount, mu)
+	}
+}
+
+func processRow2(row []string, insertedProductsCount *int, mu *sync.Mutex) {
+	ean := new(big.Int)
+	ean.SetString(row[0], 10)
+	storeCode := parseInt(row[1])
+	orderNumber := new(big.Int)
+	orderNumber.SetString(row[5], 10)
+	detra := new(big.Int)
+	detra.SetString(row[6], 10)
+	quantity := new(big.Int)
+	quantity.SetString(row[8], 10)
+
+	product, err := getProductByEAN(ean)
+	if err != nil || product == nil {
+		log.Printf("Error getting product for EAN %s: %s", ean.String(), err.Error())
+		return
+	}
+
+	store, err := getStoreByCode(storeCode)
+	if err != nil || store == nil {
+		log.Printf("Error getting store for code %d: %s", storeCode, err.Error())
+		return
+	}
+
+	order, err := getOrderByOrderNumber(orderNumber)
+	if err != nil {
+		log.Printf("Error getting order for order number %s: %s", orderNumber.String(), err.Error())
+	}
+
+	if order == nil {
+		log.Printf("Inserting Order for OrderNumber %s and Detra %s", orderNumber.String(), detra.String())
+		order = &Order{
+			OrderNumber: orderNumber.String(),
+			Detra:       detra.String(),
+			Date:        time.Now().Format(time.RFC3339),
+			StoreID:     store.ID,
+		}
+		err = createOrder(order)
+		if err != nil {
+			log.Printf("Error creating order: %s", err.Error())
+			return
+		}
+	}
+
+	if order != nil && product != nil {
+		log.Printf("Inserting OrderProduct for Order %d and Product %d", order.ID, product.ID)
+		orderProduct := &OrderProduct{
+			OrderID:   order.ID,
+			ProductID: product.ID,
+			Quantity:  quantity.String(),
+		}
+		err = createOrderProduct(orderProduct)
+		if err != nil {
+			log.Printf("Error creating order product: %s", err.Error())
+			return
+		}
+
+		mu.Lock()
+		*insertedProductsCount++
+		mu.Unlock()
+	}
 }

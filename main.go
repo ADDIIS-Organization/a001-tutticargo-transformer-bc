@@ -33,7 +33,7 @@ func main() {
 	initDB()
 
 	r := gin.Default()
-	r.Use(LoggingMiddleware())
+	r.Use(LoggingMiddleware()) // used as a first request middleware
 
 	r.POST("/orders/excel/upload", uploadFile)
 	r.GET("/test", test)

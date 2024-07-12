@@ -16,6 +16,6 @@ func initDB() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	db.SetMaxOpenConns(99)
-	db.SetMaxIdleConns(99)
+	db.SetMaxOpenConns(800)
+	db.SetMaxIdleConns(800)
 }
