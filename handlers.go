@@ -1,19 +1,21 @@
 package main
 
 import (
-	"fmt"
-	"log"
-	"math/big"
-	"net/http"
+	"fmt"      // Paquete para formateo de strings
+	"log"      // Paquete para manejo de logs
+	"math/big" // Paquete para manejo de números grandes
+	"net/http" // Paquete para manejo de peticiones HTTP
+	"os"       // Paquete para manejo de archivos y sistema operativo
+	"strings"  // Paquete para manejo de strings
 	"sync"
-	"time"
+	"time" // Paquete para manejo de tiempo
 
-	"github.com/360EntSecGroup-Skylar/excelize/v2"
-	"github.com/gin-gonic/gin"
+	"github.com/360EntSecGroup-Skylar/excelize/v2" // Librería para leer archivos Excel
+	"github.com/gin-gonic/gin"                     // Framework web para Go
 )
 
-const maxConcurrency = 800 // Aumenta el número de gorutinas concurrentes
-const batchSize = 1000     // Tamaño del lote para inserciones en transacciones
+const maxConcurrency = 80 // Aumenta el número de gorutinas concurrentes
+//const batchSize = 100     // Tamaño del lote para inserciones en batch
 
 func test(c *gin.Context) {
 	c.IndentedJSON(200, gin.H{
@@ -22,6 +24,16 @@ func test(c *gin.Context) {
 }
 
 func uploadFile(c *gin.Context) {
+	logFile, err := os.OpenFile("insertion.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not open log file"})
+		return
+	}
+	defer logFile.Close()
+
+	logger := log.New(logFile, "", log.LstdFlags)
+	logger.Println("Nueva inserción a las", time.Now())
+
 	file, err := c.FormFile("file")
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Please upload a valid file."})
@@ -62,47 +74,98 @@ func uploadFile(c *gin.Context) {
 	fmt.Println("Total rows found:", len(rows))
 
 	var wg sync.WaitGroup
-	sem := make(chan struct{}, maxConcurrency)
-	rowChan := make(chan []string, len(rows)-1) // Canal para enviar las filas a las gorutinas
-
+	semaphore := make(chan struct{}, maxConcurrency)
 	insertedProductsCount := 0
-	mu := &sync.Mutex{}
+	var mu sync.Mutex
 
-	// Inicia las gorutinas que procesarán las filas
-	for i := 0; i < maxConcurrency; i++ {
-		wg.Add(1)
-		go func() {
-			defer wg.Done() // we are done when the function finishes, this is important to avoid deadlocks
-			for row := range rowChan {
-				processRow(row, &insertedProductsCount, mu, sem)
-			}
-		}()
-	}
-
-	// Envía las filas a las gorutinas
 	for i, row := range rows {
 		if i == 0 {
 			continue // Skip header row
 		}
 
-		if len(row) < 14 {
-			fmt.Println("Skipping incomplete row:", row)
-			continue
-		}
+		wg.Add(1)
+		semaphore <- struct{}{}
 
-		rowChan <- row
+		go func(row []string, i int) {
+			defer wg.Done()
+			defer func() { <-semaphore }()
+
+			if len(row) < 14 || strings.TrimSpace(row[0]) == "" || strings.TrimSpace(row[5]) == "" {
+				fmt.Println("Skipping incomplete or invalid row:", row, "fila", i)
+				logger.Printf("Skipping incomplete or invalid row: %v fila %d\n", row, i)
+				return
+			}
+
+			if strings.TrimSpace(row[12]) == "" && strings.TrimSpace(row[13]) != "" {
+				fmt.Println("Skipping row with empty reference and non-empty provider:", row)
+				return
+			}
+
+			productID, storeID, quantity, err := processRowForBatch(row)
+			if err != nil {
+				logger.Printf("Error processing row: %s", err.Error())
+				return
+			}
+
+			orderNumber := new(big.Int)
+			orderNumber.SetString(row[5], 10)
+
+			order, err := getOrderByOrderNumber(orderNumber)
+			if err != nil {
+				if err == ErrOrderNotFound {
+					order = &Order{
+						OrderNumber: orderNumber.String(),
+						Detra:       row[6],
+						Date:        time.Now().Format(time.RFC3339),
+						StoreID:     storeID,
+					}
+					err = createOrder(order)
+					if err != nil {
+						logger.Printf("Error creating order: %s", err.Error())
+						return
+					}
+				} else {
+					logger.Printf("Error checking if order exists: %s", err.Error())
+					return
+				}
+			}
+
+			var exists bool
+			checkQuery := "SELECT EXISTS(SELECT 1 FROM order_product WHERE orders_id = $1 AND products_id = $2 LIMIT 1)"
+			err = db.QueryRow(checkQuery, order.ID, productID).Scan(&exists)
+			if err != nil {
+				logger.Printf("Error checking if order_product exists: %s", err.Error())
+				return
+			}
+
+			if exists {
+				return
+			}
+
+			orderProduct := &OrderProduct{
+				OrderID:   order.ID,
+				ProductID: productID,
+				Quantity:  quantity,
+			}
+			err = createOrderProduct(orderProduct)
+			if err != nil {
+				logger.Printf("Error creating order_product: %s", err.Error())
+				return
+			}
+
+			mu.Lock()
+			insertedProductsCount++
+			mu.Unlock()
+		}(row, i)
 	}
-	close(rowChan) // Cierra el canal para que las gorutinas terminen
 
 	wg.Wait()
+	logger.Printf("Inserción completada. Total de productos insertados: %d\n", insertedProductsCount)
 
 	c.JSON(http.StatusOK, gin.H{"message": fmt.Sprintf("%d products inserted", insertedProductsCount)})
 }
 
-func processRow(row []string, insertedProductsCount *int, mu *sync.Mutex, sem chan struct{}) {
-	sem <- struct{}{}
-	defer func() { <-sem }()
-
+func processRowForBatch(row []string) (int64, int64, string, error) {
 	ean := new(big.Int)
 	ean.SetString(row[0], 10)
 	storeCode := parseInt(row[1])
@@ -112,131 +175,28 @@ func processRow(row []string, insertedProductsCount *int, mu *sync.Mutex, sem ch
 	detra.SetString(row[6], 10)
 	quantity := new(big.Int)
 	quantity.SetString(row[8], 10)
+	reference := new(big.Int)
+	reference.SetString(row[12], 10)
+
+	if reference.String() == "0" {
+		return 0, 0, "", nil
+	}
 
 	product, err := getProductByEAN(ean)
 	if err != nil || product == nil {
-		log.Printf("Error getting product for EAN %s: %s", ean.String(), err.Error())
-		return
+		return 0, 0, "", fmt.Errorf("error obteniendo el producto de EAN %s: %w", ean.String(), err)
 	}
 
 	store, err := getStoreByCode(storeCode)
 	if err != nil || store == nil {
-		log.Printf("Error getting store for code %d: %s", storeCode, err.Error())
-		return
+		return 0, 0, "", fmt.Errorf("error obteniendo la tienda de código %d: %w", storeCode, err)
 	}
 
-	order, err := getOrderByOrderNumber(orderNumber)
-	if err != nil {
-		log.Printf("Error getting order for order number %s: %s", orderNumber.String(), err.Error())
-	}
-
-	if order == nil {
-		log.Printf("Inserting Order for OrderNumber %s and Detra %s", orderNumber.String(), detra.String())
-		order = &Order{
-			OrderNumber: orderNumber.String(),
-			Detra:       detra.String(),
-			Date:        time.Now().Format(time.RFC3339),
-			StoreID:     store.ID,
-		}
-		err = createOrder(order)
-		if err != nil {
-			log.Printf("Error creating order: %s", err.Error())
-			return
-		}
-	}
-
-	if order != nil && product != nil {
-		log.Printf("Inserting OrderProduct for Order %d and Product %d", order.ID, product.ID)
-		orderProduct := &OrderProduct{
-			OrderID:   order.ID,
-			ProductID: product.ID,
-			Quantity:  quantity.String(),
-		}
-		err = createOrderProduct(orderProduct)
-		if err != nil {
-			log.Printf("Error creating order product: %s", err.Error())
-			return
-		}
-
-		mu.Lock()
-		*insertedProductsCount++
-		mu.Unlock()
-	}
+	return product.ID, store.ID, quantity.String(), nil
 }
 
 func parseInt(s string) int {
 	var i int
 	fmt.Sscanf(s, "%d", &i)
 	return i
-}
-
-func processBatch(batch [][]string, insertedProductsCount *int, mu *sync.Mutex, sem chan struct{}) {
-	sem <- struct{}{}
-	defer func() { <-sem }()
-
-	for _, row := range batch {
-		processRow2(row, insertedProductsCount, mu)
-	}
-}
-
-func processRow2(row []string, insertedProductsCount *int, mu *sync.Mutex) {
-	ean := new(big.Int)
-	ean.SetString(row[0], 10)
-	storeCode := parseInt(row[1])
-	orderNumber := new(big.Int)
-	orderNumber.SetString(row[5], 10)
-	detra := new(big.Int)
-	detra.SetString(row[6], 10)
-	quantity := new(big.Int)
-	quantity.SetString(row[8], 10)
-
-	product, err := getProductByEAN(ean)
-	if err != nil || product == nil {
-		log.Printf("Error getting product for EAN %s: %s", ean.String(), err.Error())
-		return
-	}
-
-	store, err := getStoreByCode(storeCode)
-	if err != nil || store == nil {
-		log.Printf("Error getting store for code %d: %s", storeCode, err.Error())
-		return
-	}
-
-	order, err := getOrderByOrderNumber(orderNumber)
-	if err != nil {
-		log.Printf("Error getting order for order number %s: %s", orderNumber.String(), err.Error())
-	}
-
-	if order == nil {
-		log.Printf("Inserting Order for OrderNumber %s and Detra %s", orderNumber.String(), detra.String())
-		order = &Order{
-			OrderNumber: orderNumber.String(),
-			Detra:       detra.String(),
-			Date:        time.Now().Format(time.RFC3339),
-			StoreID:     store.ID,
-		}
-		err = createOrder(order)
-		if err != nil {
-			log.Printf("Error creating order: %s", err.Error())
-			return
-		}
-	}
-
-	if order != nil && product != nil {
-		log.Printf("Inserting OrderProduct for Order %d and Product %d", order.ID, product.ID)
-		orderProduct := &OrderProduct{
-			OrderID:   order.ID,
-			ProductID: product.ID,
-			Quantity:  quantity.String(),
-		}
-		err = createOrderProduct(orderProduct)
-		if err != nil {
-			log.Printf("Error creating order product: %s", err.Error())
-			return
-		}
-
-		mu.Lock()
-		*insertedProductsCount++
-		mu.Unlock()
-	}
 }

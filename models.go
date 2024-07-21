@@ -1,6 +1,9 @@
 package main
 
 import (
+	"database/sql"
+	"errors"
+	"log"
 	"math/big"
 )
 
@@ -48,21 +51,29 @@ func getStoreByCode(code int) (*Store, error) {
 	return &store, nil
 }
 
+var ErrOrderNotFound = errors.New("order not found")
+
 func getOrderByOrderNumber(orderNumber *big.Int) (*Order, error) {
 	var order Order
 	err := db.Get(&order, "SELECT id, order_number, detra, date, stores_id FROM orders WHERE order_number = $1", orderNumber.String())
 	if err != nil {
+		if err == sql.ErrNoRows {
+			log.Printf("Order not found: %s", orderNumber.String())
+			return nil, ErrOrderNotFound
+		}
 		return nil, err
 	}
 	return &order, nil
 }
 
 func createOrder(order *Order) error {
-	_, err := db.NamedExec(`INSERT INTO orders (order_number, detra, date, stores_id) VALUES (:order_number, :detra, :date, :stores_id)`, order)
+	err := db.QueryRow(`INSERT INTO orders (order_number, detra, date, stores_id) VALUES ($1, $2, $3, $4) RETURNING id`,
+		order.OrderNumber, order.Detra, order.Date, order.StoreID).Scan(&order.ID)
 	return err
 }
 
 func createOrderProduct(orderProduct *OrderProduct) error {
-	_, err := db.NamedExec(`INSERT INTO order_product (orders_id, products_id, quantity) VALUES (:orders_id, :products_id, :quantity)`, orderProduct)
+	log.Printf("a punto de insertar orderProduct: %+v", orderProduct)
+	_, err := db.Exec(`INSERT INTO order_product (orders_id, products_id, quantity) VALUES ($1, $2, $3)`, orderProduct.OrderID, orderProduct.ProductID, orderProduct.Quantity)
 	return err
 }
