@@ -18,8 +18,8 @@ func initDB() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	db.SetMaxOpenConns(80) // Aumentar el número de conexiones abiertas
-	db.SetMaxIdleConns(80) // Aumentar el número de conexiones en espera
+	db.SetMaxOpenConns(50) // Aumentar el número de conexiones abiertas
+	db.SetMaxIdleConns(50) // Aumentar el número de conexiones en espera
 }
 
 /**
