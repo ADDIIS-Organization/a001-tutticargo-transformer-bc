@@ -39,5 +39,5 @@ func main() {
 	r.GET("/test", test)
 	r.GET("/test2", test)
 
-	r.Run(":8081")
+	r.Run(":8080")
 }
