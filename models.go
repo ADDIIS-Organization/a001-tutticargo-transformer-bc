@@ -33,6 +33,13 @@ type OrderProduct struct {
 	Quantity  string `db:"quantity"`
 }
 
+type OrderPallet struct {
+	BigPallets    int64 `db:"big_pallets"`
+	LittlePallets int64 `db:"little_pallets"`
+	DispoId       int64 `db:"dispo_id"`
+	OrderID       int64 `db:"orders_id"`
+}
+
 func getProductByEAN(ean *big.Int) (*Product, error) {
 	var product Product
 	err := db.Get(&product, "SELECT id, code, ean FROM products WHERE ean = $1", ean.String())
@@ -75,5 +82,10 @@ func createOrder(order *Order) error {
 func createOrderProduct(orderProduct *OrderProduct) error {
 	log.Printf("a punto de insertar orderProduct: %+v", orderProduct)
 	_, err := db.Exec(`INSERT INTO order_product (orders_id, products_id, quantity) VALUES ($1, $2, $3)`, orderProduct.OrderID, orderProduct.ProductID, orderProduct.Quantity)
+	return err
+}
+
+func createOrderPallet(OrderPallet *OrderPallet) error {
+	_, err := db.Exec(`INSERT INTO order_pallet (big_pallets, little_pallets, dispo_id, orders_id) VALUES ($1, $2, $3, $4)`, OrderPallet.BigPallets, OrderPallet.LittlePallets, OrderPallet.DispoId, OrderPallet.OrderID)
 	return err
 }

@@ -153,6 +153,21 @@ func uploadFile(c *gin.Context) {
 				return
 			}
 
+			// Now let's create by default 12 pallets for each order with big_pallets = 0, little_pallets = 0, dispo_id from 1 to 12, and finally orders_id = order.ID
+			for i := 1; i <= 12; i++ {
+				orderPallet := &OrderPallet{
+					BigPallets:    0,
+					LittlePallets: 0,
+					DispoId:       int64(i),
+					OrderID:       order.ID,
+				}
+				err = createOrderPallet(orderPallet)
+				if err != nil {
+					logger.Printf("Error creating order_pallet: %s", err.Error())
+					return
+				}
+			}
+
 			mu.Lock()
 			insertedProductsCount++
 			mu.Unlock()
