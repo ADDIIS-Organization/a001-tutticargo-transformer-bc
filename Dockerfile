@@ -25,8 +25,14 @@ WORKDIR /root/
 # Copy the Pre-built binary file from the previous stage
 COPY --from=build /app/main .
 
+# Copy the .env file
+COPY .env .
+
 # Expose port 8080 to the outside world
 EXPOSE 8080
+
+# Set environment variables from .env file
+ENV $(cat .env | xargs)
 
 # Command to run the executable
 CMD ["./main"]

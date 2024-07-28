@@ -14,7 +14,7 @@ import (
 	"github.com/gin-gonic/gin"                     // Framework web para Go
 )
 
-const maxConcurrency = 80 // Aumenta el número de gorutinas concurrentes
+const maxConcurrency = 400 // Aumenta el número de gorutinas concurrentes
 //const batchSize = 100     // Tamaño del lote para inserciones en batch
 
 func test(c *gin.Context) {
@@ -154,23 +154,25 @@ func uploadFile(c *gin.Context) {
 			}
 
 			// Now let's create by default 12 pallets for each order with big_pallets = 0, little_pallets = 0, dispo_id from 1 to 12, and finally orders_id = order.ID
-			for i := 1; i <= 12; i++ {
-				orderPallet := &OrderPallet{
-					BigPallets:    0,
-					LittlePallets: 0,
-					DispoId:       int64(i),
-					OrderID:       order.ID,
-				}
-				err = createOrderPallet(orderPallet)
-				if err != nil {
-					logger.Printf("Error creating order_pallet: %s", err.Error())
-					return
-				}
-			}
+			// for i := 1; i <= 12; i++ {
+			// 	orderPallet := &OrderPallet{
+			// 		BigPallets:    0,
+			// 		LittlePallets: 0,
+			// 		DispoId:       int64(i),
+			// 		OrderID:       order.ID,
+			// 	}
+			// 	err = createOrderPallet(orderPallet)
+			// 	if err != nil {
+			// 		logger.Printf("Error creating order_pallet for order %d and dispo_id %d: %s", order.ID, i, err.Error())
+			// 		return
+			// 	} else {
+			// 		logger.Printf("Creating order_pallet for order %d and dispo_id %d", order.ID, i)
+			// 	}
+			// }
 
-			mu.Lock()
+			mu.Lock() // Esto se hace en este caso para evitar que se sobreescriban los valores de insertedProductsCount
 			insertedProductsCount++
-			mu.Unlock()
+			mu.Unlock() // Se desbloquea el mutex, recordemos que el mutex es un candado que se pone para evitar que dos o más gorutinas accedan a la misma variable al mismo tiempo
 		}(row, i)
 	}
 
