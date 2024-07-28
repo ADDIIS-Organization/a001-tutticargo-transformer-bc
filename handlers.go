@@ -76,6 +76,7 @@ func uploadFile(c *gin.Context) {
 	var wg sync.WaitGroup
 	semaphore := make(chan struct{}, maxConcurrency)
 	insertedProductsCount := 0
+	insertedOrdersCount := 0
 	var mu sync.Mutex
 
 	for i, row := range rows {
@@ -124,6 +125,9 @@ func uploadFile(c *gin.Context) {
 						logger.Printf("Error creating order: %s", err.Error())
 						return
 					}
+					mu.Lock()
+					insertedOrdersCount++
+					mu.Unlock()
 				} else {
 					logger.Printf("Error checking if order exists: %s", err.Error())
 					return
@@ -177,10 +181,11 @@ func uploadFile(c *gin.Context) {
 	}
 
 	wg.Wait()
-	logger.Printf("Inserción completada. Total de productos insertados: %d\n", insertedProductsCount)
+	logger.Printf("Inserción completada. Total de órdenes insertadas: %d, Total de productos insertados: %d\n", insertedOrdersCount, insertedProductsCount)
 
-	c.JSON(http.StatusOK, gin.H{"message": fmt.Sprintf("%d products inserted", insertedProductsCount)})
+	c.JSON(http.StatusOK, gin.H{"message": fmt.Sprintf("%d órdenes insertadas, %d productos insertados", insertedOrdersCount, insertedProductsCount)})
 }
+
 
 func processRowForBatch(row []string) (int64, int64, string, error) {
 	ean := new(big.Int)
