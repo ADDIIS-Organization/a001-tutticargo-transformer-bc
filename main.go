@@ -37,7 +37,7 @@ func main() {
 
 	// Configura CORS middleware
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"https://tutti.addiis.co", "http://localhost:5173"},
+		AllowOrigins:     []string{"https://tuti.addiis.co", "http://localhost:5173"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Accept"},
 		ExposeHeaders:    []string{"Content-Length"},
