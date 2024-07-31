@@ -1,9 +1,10 @@
 package main
 
 import (
-	"fmt"      // Paquete para formateo de strings
-	"log"      // Paquete para manejo de logs
-	"math/big" // Paquete para manejo de números grandes
+	"fmt" // Paquete para formateo de strings
+	"log" // Paquete para manejo de logs
+
+	// Paquete para manejo de números grandes
 	"net/http" // Paquete para manejo de peticiones HTTP
 	"os"       // Paquete para manejo de archivos y sistema operativo
 	"strings"  // Paquete para manejo de strings
@@ -14,7 +15,7 @@ import (
 	"github.com/gin-gonic/gin"                     // Framework web para Go
 )
 
-const maxConcurrency = 80 // Aumenta el número de gorutinas concurrentes
+const maxConcurrency = 400 // Aumenta el número de gorutinas concurrentes
 //const batchSize = 100     // Tamaño del lote para inserciones en batch
 
 func test(c *gin.Context) {
@@ -75,13 +76,12 @@ func uploadFile(c *gin.Context) {
 
 	var wg sync.WaitGroup
 	semaphore := make(chan struct{}, maxConcurrency)
-	insertedProductsCount := 0
-	insertedOrdersCount := 0
+	insertedStoresCount := 0
 	var mu sync.Mutex
 
 	for i, row := range rows {
 		if i == 0 {
-			continue // Skip header row
+			continue // Omitir la fila de encabezado
 		}
 
 		wg.Add(1)
@@ -102,117 +102,35 @@ func uploadFile(c *gin.Context) {
 				return
 			}
 
-			productID, storeID, quantity, err := processRowForBatch(row)
-			if err != nil {
-				logger.Printf("Error processing row: %s", err.Error())
+			storeCode := parseInt(row[1])
+			store, err := getStoreByCode(storeCode)
+			if err != nil || store == nil {
+				logger.Printf("Error getting store with code %d: %s", storeCode, err.Error())
 				return
 			}
 
-			orderNumber := new(big.Int)
-			orderNumber.SetString(row[5], 10)
-
-			order, err := getOrderByOrderNumber(orderNumber)
-			if err != nil {
-				if err == ErrOrderNotFound {
-					order = &Order{
-						OrderNumber: orderNumber.String(),
-						Detra:       row[6],
-						Date:        time.Now().Format(time.RFC3339),
-						StoreID:     storeID,
-					}
-					err = createOrder(order)
-					if err != nil {
-						logger.Printf("Error creating order: %s", err.Error())
-						return
-					}
-					mu.Lock()
-					insertedOrdersCount++
-					mu.Unlock()
-				} else {
-					logger.Printf("Error checking if order exists: %s", err.Error())
-					return
-				}
-			}
-
-			var exists bool
-			checkQuery := "SELECT EXISTS(SELECT 1 FROM order_product WHERE orders_id = $1 AND products_id = $2 LIMIT 1)"
-			err = db.QueryRow(checkQuery, order.ID, productID).Scan(&exists)
-			if err != nil {
-				logger.Printf("Error checking if order_product exists: %s", err.Error())
+			if storeInsertedToday(store.ID) {
+				logger.Printf("Esta tienda ya ha sido insertada el día de hoy: %d", store.ID)
 				return
 			}
 
-			if exists {
-				return
-			}
-
-			orderProduct := &OrderProduct{
-				OrderID:   order.ID,
-				ProductID: productID,
-				Quantity:  quantity,
-			}
-			err = createOrderProduct(orderProduct)
+			orderStore := &OrderStore{StoreID: store.ID}
+			err = createOrderStore(orderStore)
 			if err != nil {
-				logger.Printf("Error creating order_product: %s", err.Error())
+				logger.Printf("Error creating Order Store: %s", err.Error())
 				return
-			}
-
-			// Now let's create by default 12 pallets for each order with big_pallets = 0, little_pallets = 0, dispo_id from 1 to 12, and finally orders_id = order.ID
-			for i := 1; i <= 12; i++ {
-				orderPallet := &OrderPallet{
-					BigPallets:    0,
-					LittlePallets: 0,
-					DispoId:       int64(i),
-					OrderID:       order.ID,
-				}
-				err = createOrderPallet(orderPallet)
-				if err != nil {
-					logger.Printf("Error creating order_pallet: %s", err.Error())
-					return
-				}
 			}
 
 			mu.Lock()
-			insertedProductsCount++
+			insertedStoresCount++
 			mu.Unlock()
 		}(row, i)
 	}
 
 	wg.Wait()
-	logger.Printf("Inserción completada. Total de órdenes insertadas: %d, Total de productos insertados: %d\n", insertedOrdersCount, insertedProductsCount)
+	logger.Printf("Inserción completada. Total de tiendas insertadas: %d\n", insertedStoresCount)
 
-	c.JSON(http.StatusOK, gin.H{"message": fmt.Sprintf("%d órdenes insertadas, %d productos insertados", insertedOrdersCount, insertedProductsCount)})
-}
-
-
-func processRowForBatch(row []string) (int64, int64, string, error) {
-	ean := new(big.Int)
-	ean.SetString(row[0], 10)
-	storeCode := parseInt(row[1])
-	orderNumber := new(big.Int)
-	orderNumber.SetString(row[5], 10)
-	detra := new(big.Int)
-	detra.SetString(row[6], 10)
-	quantity := new(big.Int)
-	quantity.SetString(row[8], 10)
-	reference := new(big.Int)
-	reference.SetString(row[12], 10)
-
-	if reference.String() == "0" {
-		return 0, 0, "", nil
-	}
-
-	product, err := getProductByEAN(ean)
-	if err != nil || product == nil {
-		return 0, 0, "", fmt.Errorf("error obteniendo el producto de EAN %s: %w", ean.String(), err)
-	}
-
-	store, err := getStoreByCode(storeCode)
-	if err != nil || store == nil {
-		return 0, 0, "", fmt.Errorf("error obteniendo la tienda de código %d: %w", storeCode, err)
-	}
-
-	return product.ID, store.ID, quantity.String(), nil
+	c.JSON(http.StatusOK, gin.H{"message": fmt.Sprintf("Las órdenes de %d tiendas fueron insertadas correctamente", insertedStoresCount)})
 }
 
 func parseInt(s string) int {
