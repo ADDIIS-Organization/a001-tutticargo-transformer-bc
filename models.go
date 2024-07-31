@@ -1,17 +1,18 @@
+/*
+*
+  - En este archivo se definen las estructuras de datos que se van a utilizar en la aplicación
+  - Recordemos tambien que en Go, las estructuras de datos se definen con la palabra reservada type
+  - y se pueden definir de la siguiente manera:
+  - type NombreDeLaEstructura struct {
+  - NombreDelCampo TipoDeDato `etiqueta:"nombre_de_la_columna_en_la_base_de_datos"`
+  - }
+    *
+  - En este caso, se definen las estructuras Product, Store, Order, OrderProduct, OrderStore y OrderPallet
+  - También se definen las funciones que se van a utilizar para interactuar con la base de datos
+*/
 package main
 
-import (
-	"database/sql"
-	"errors"
-	"log"
-	"math/big"
-)
-
-type Product struct {
-	ID   int64  `db:"id"`
-	Code int    `db:"code"`
-	EAN  string `db:"ean"`
-}
+import "log"
 
 type Store struct {
 	ID   int64  `db:"id"`
@@ -19,34 +20,9 @@ type Store struct {
 	Code int    `db:"code"`
 }
 
-type Order struct {
-	ID          int64  `db:"id"`
-	OrderNumber string `db:"order_number"`
-	Detra       string `db:"detra"`
-	Date        string `db:"date"`
-	StoreID     int64  `db:"stores_id"`
-}
-
-type OrderProduct struct {
-	OrderID   int64  `db:"orders_id"`
-	ProductID int64  `db:"products_id"`
-	Quantity  string `db:"quantity"`
-}
-
-type OrderPallet struct {
-	BigPallets    int64 `db:"big_pallets"`
-	LittlePallets int64 `db:"little_pallets"`
-	DispoId       int64 `db:"dispo_id"`
-	OrderID       int64 `db:"orders_id"`
-}
-
-func getProductByEAN(ean *big.Int) (*Product, error) {
-	var product Product
-	err := db.Get(&product, "SELECT id, code, ean FROM products WHERE ean = $1", ean.String())
-	if err != nil {
-		return nil, err
-	}
-	return &product, nil
+type OrderStore struct {
+	StoreID int64 `db:"store_id"`
+	Date    string
 }
 
 func getStoreByCode(code int) (*Store, error) {
@@ -58,34 +34,17 @@ func getStoreByCode(code int) (*Store, error) {
 	return &store, nil
 }
 
-var ErrOrderNotFound = errors.New("order not found")
-
-func getOrderByOrderNumber(orderNumber *big.Int) (*Order, error) {
-	var order Order
-	err := db.Get(&order, "SELECT id, order_number, detra, date, stores_id FROM orders WHERE order_number = $1", orderNumber.String())
+func storeInsertedToday(storeId int64) bool {
+	var count int
+	err := db.Get(&count, "SELECT COUNT(*) FROM order_store WHERE store_id = $1 AND DATE(date) = CURRENT_DATE;", storeId)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			log.Printf("Order not found: %s", orderNumber.String())
-			return nil, ErrOrderNotFound
-		}
-		return nil, err
+		log.Printf("Error getting count of store inserted today: %s", err.Error())
+		return false
 	}
-	return &order, nil
+	return count > 0
 }
 
-func createOrder(order *Order) error {
-	err := db.QueryRow(`INSERT INTO orders (order_number, detra, date, stores_id) VALUES ($1, $2, $3, $4) RETURNING id`,
-		order.OrderNumber, order.Detra, order.Date, order.StoreID).Scan(&order.ID)
-	return err
-}
-
-func createOrderProduct(orderProduct *OrderProduct) error {
-	log.Printf("a punto de insertar orderProduct: %+v", orderProduct)
-	_, err := db.Exec(`INSERT INTO order_product (orders_id, products_id, quantity) VALUES ($1, $2, $3)`, orderProduct.OrderID, orderProduct.ProductID, orderProduct.Quantity)
-	return err
-}
-
-func createOrderPallet(OrderPallet *OrderPallet) error {
-	_, err := db.Exec(`INSERT INTO order_pallet (big_pallets, little_pallets, dispo_id, orders_id) VALUES ($1, $2, $3, $4)`, OrderPallet.BigPallets, OrderPallet.LittlePallets, OrderPallet.DispoId, OrderPallet.OrderID)
+func createOrderStore(orderStore *OrderStore) error {
+	_, err := db.Exec(`INSERT INTO order_store (store_id) VALUES ($1)`, orderStore.StoreID)
 	return err
 }
