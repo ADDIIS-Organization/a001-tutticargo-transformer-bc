@@ -15,7 +15,7 @@ import (
 	"github.com/gin-gonic/gin"                     // Framework web para Go
 )
 
-const maxConcurrency = 400 // Aumenta el número de gorutinas concurrentes
+const maxConcurrency = 1 // Aumenta el número de gorutinas concurrentes
 //const batchSize = 100     // Tamaño del lote para inserciones en batch
 
 func test(c *gin.Context) {
@@ -79,24 +79,30 @@ func uploadFile(c *gin.Context) {
 	insertedStoresCount := 0
 	var mu sync.Mutex
 
+	// Iterar sobre las filas del archivo Excel
 	for i, row := range rows {
 		if i == 0 {
 			continue // Omitir la fila de encabezado
 		}
 
+		// Incrementar el contador de WaitGroup
 		wg.Add(1)
+		// Enviar una señal al semáforo, esto para indicar que una gorutina está en ejecución
 		semaphore <- struct{}{}
 
+		// Crear una gorutina para procesar la fila actual
 		go func(row []string, i int) {
-			defer wg.Done()
+			defer wg.Done() // Decrementar el contador de WaitGroup al finalizar la gorutina
 			defer func() { <-semaphore }()
 
+			// Validar que la fila tenga al menos 14 columnas y que las columnas 0 y 5 no estén vacías
 			if len(row) < 14 || strings.TrimSpace(row[0]) == "" || strings.TrimSpace(row[5]) == "" {
 				fmt.Println("Skipping incomplete or invalid row:", row, "fila", i)
 				logger.Printf("Skipping incomplete or invalid row: %v fila %d\n", row, i)
 				return
 			}
 
+			// Validar que la columna 12 no esté vacía si la columna 13 no está vacía
 			if strings.TrimSpace(row[12]) == "" && strings.TrimSpace(row[13]) != "" {
 				fmt.Println("Skipping row with empty reference and non-empty provider:", row)
 				return
@@ -110,7 +116,7 @@ func uploadFile(c *gin.Context) {
 			}
 
 			if storeInsertedToday(store.ID) {
-				logger.Printf("Esta tienda ya ha sido insertada el día de hoy: %d", store.ID)
+				logger.Printf("Esta tienda ya ha sido insertada el día de hoy: %d, fecha: %s", store.ID, time.Now().Format("2006-01-02"))
 				return
 			}
 
@@ -127,7 +133,7 @@ func uploadFile(c *gin.Context) {
 		}(row, i)
 	}
 
-	wg.Wait()
+	wg.Wait() // Esperar a que todas las gorutinas terminen
 	logger.Printf("Inserción completada. Total de tiendas insertadas: %d\n", insertedStoresCount)
 
 	c.JSON(http.StatusOK, gin.H{"message": fmt.Sprintf("Las órdenes de %d tiendas fueron insertadas correctamente", insertedStoresCount)})

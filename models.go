@@ -21,8 +21,8 @@ type Store struct {
 }
 
 type OrderStore struct {
-	StoreID int64 `db:"store_id"`
-	Date    string
+	StoreID int64  `db:"store_id"`
+	Date    string `db:"date"`
 }
 
 func getStoreByCode(code int) (*Store, error) {
@@ -45,6 +45,6 @@ func storeInsertedToday(storeId int64) bool {
 }
 
 func createOrderStore(orderStore *OrderStore) error {
-	_, err := db.Exec(`INSERT INTO order_store (store_id) VALUES ($1)`, orderStore.StoreID)
+	_, err := db.Exec(`INSERT INTO order_store (store_id, date) VALUES ($1, (CURRENT_TIMESTAMP AT TIME ZONE 'UTC') AT TIME ZONE 'GMT-5')`, orderStore.StoreID)
 	return err
 }
