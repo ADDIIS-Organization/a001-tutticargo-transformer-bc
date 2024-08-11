@@ -127,16 +127,18 @@ func uploadFile(c *gin.Context) {
 				return
 			}
 
-			mu.Lock()
-			insertedStoresCount++
-			mu.Unlock()
+			mu.Lock()             // Bloquear el acceso a la variable compartida
+			insertedStoresCount++ // Incrementar el contador de tiendas insertadas
+			mu.Unlock()           // Desbloquear el acceso a la variable compartida
 		}(row, i)
 	}
 
 	wg.Wait() // Esperar a que todas las gorutinas terminen
 	logger.Printf("Inserción completada. Total de tiendas insertadas: %d\n", insertedStoresCount)
 
-	c.JSON(http.StatusOK, gin.H{"message": fmt.Sprintf("Las órdenes de %d tiendas fueron insertadas correctamente", insertedStoresCount)})
+	c.JSON(http.StatusOK, gin.H{
+		"message": fmt.Sprintf("Las órdenes de %d tiendas fueron insertadas correctamente. Se leyeron %d registros.", insertedStoresCount, len(rows)),
+	})
 }
 
 func parseInt(s string) int {
