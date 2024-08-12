@@ -12,7 +12,10 @@
 */
 package main
 
-import "log"
+import (
+	"fmt"
+	"log"
+)
 
 type Store struct {
 	ID   int64  `db:"id"`
@@ -34,9 +37,17 @@ func getStoreByCode(code int) (*Store, error) {
 	return &store, nil
 }
 
-func storeInsertedToday(storeId int64) bool {
+func storeInsertedToday(storeId int64, logger *log.Logger) bool {
 	var count int
-	err := db.Get(&count, "SELECT COUNT(*) FROM order_store WHERE store_id = $1 AND DATE(date) = CURRENT_DATE;", storeId)
+	fmt.Println("Desde storeInsertedToday storeId:", storeId)
+	logger.Printf("Desde storeInsertedToday storeId: %d", storeId)
+	err := db.Get(&count, `
+		SELECT COUNT(*) 
+		FROM order_store 
+		WHERE store_id = $1 
+		AND DATE(date) = CURRENT_DATE;`, storeId)
+	fmt.Println("Desde storeInsertedToday count:", count)
+	logger.Printf("Desde storeInsertedToday count: %d", count)
 	if err != nil {
 		log.Printf("Error getting count of store inserted today: %s", err.Error())
 		return false
@@ -45,6 +56,8 @@ func storeInsertedToday(storeId int64) bool {
 }
 
 func createOrderStore(orderStore *OrderStore) error {
-	_, err := db.Exec(`INSERT INTO order_store (store_id, date) VALUES ($1, (CURRENT_TIMESTAMP AT TIME ZONE 'UTC') AT TIME ZONE 'GMT-5')`, orderStore.StoreID)
+	_, err := db.Exec(`
+		INSERT INTO order_store (store_id, date) 
+		VALUES ($1, (CURRENT_TIMESTAMP AT TIME ZONE 'UTC') AT TIME ZONE 'GMT-5')`, orderStore.StoreID)
 	return err
 }

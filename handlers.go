@@ -16,7 +16,7 @@ import (
 
 func test(c *gin.Context) {
 	c.IndentedJSON(200, gin.H{
-		"message": "Server is running",
+		"message": fmt.Sprintf("Server is running and today's date is: %s", time.Now().Format("2006-01-02")),
 	})
 }
 
@@ -157,7 +157,7 @@ func uploadFile(c *gin.Context) {
 		}
 
 		// 28. Validar que la tienda no haya sido insertada el día de hoy
-		if storeInsertedToday(store.ID) {
+		if storeInsertedToday(store.ID, logger) {
 			// 28.1. Imprimir un mensaje de advertencia en la consola y en el archivo de log
 			fmt.Println("Skipping store already inserted today:", store.ID)
 			// 28.2. Escribir un mensaje en el archivo de log

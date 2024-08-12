@@ -19,6 +19,13 @@ RUN go build -o main .
 # Start a new stage from scratch
 FROM alpine:latest
 
+# Install tzdata for timezone handling
+RUN apk add --no-cache tzdata
+
+# Set the timezone to America/Bogota
+ENV TZ=America/Bogota
+RUN cp /usr/share/zoneinfo/America/Bogota /etc/localtime && echo "America/Bogota" > /etc/timezone
+
 # Set the Current Working Directory inside the container
 WORKDIR /root/
 
