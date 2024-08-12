@@ -39,13 +39,19 @@ func getStoreByCode(code int) (*Store, error) {
 
 func storeInsertedToday(storeId int64, logger *log.Logger) bool {
 	var count int
-	fmt.Println("Desde storeInsertedToday storeId:", storeId)
-	logger.Printf("Desde storeInsertedToday storeId: %d", storeId)
-	err := db.Get(&count, `
-		SELECT COUNT(*) 
-		FROM order_store 
-		WHERE store_id = $1 
-		AND DATE(date) = CURRENT_DATE;`, storeId)
+	query := `
+        SELECT COUNT(*) 
+        FROM order_store 
+        WHERE store_id = $1 
+        AND DATE(date) = CURRENT_DATE;`
+
+	// Aquí se está construyendo la consulta final con el valor interpolado.
+	fullQuery := fmt.Sprintf("SELECT COUNT(*) FROM order_store WHERE store_id = %d AND DATE(date) = CURRENT_DATE;", storeId)
+
+	fmt.Println("Query:", fullQuery)
+	logger.Printf("Query: %s", fullQuery)
+
+	err := db.Get(&count, query, storeId)
 	fmt.Println("Desde storeInsertedToday count:", count)
 	logger.Printf("Desde storeInsertedToday count: %d", count)
 	if err != nil {
@@ -58,6 +64,6 @@ func storeInsertedToday(storeId int64, logger *log.Logger) bool {
 func createOrderStore(orderStore *OrderStore) error {
 	_, err := db.Exec(`
 		INSERT INTO order_store (store_id, date) 
-		VALUES ($1, (CURRENT_TIMESTAMP AT TIME ZONE 'UTC') AT TIME ZONE 'GMT-5')`, orderStore.StoreID)
+		VALUES ($1, CURRENT_TIMESTAMP)`, orderStore.StoreID)
 	return err
 }
