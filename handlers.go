@@ -169,7 +169,7 @@ func uploadFile(c *gin.Context) {
 		// 29. Crear una nueva orden con los datos de la fila
 		orderStore := &OrderStore{StoreID: store.ID}
 		// 30. Asignar los valores de la fila a la orden
-		err = createOrderStore(orderStore)
+		id, err := createOrderStore(orderStore)
 		// 31. Manejar el error si no se pudo crear la orden
 		if err != nil {
 			// 31.1. Imprimir un mensaje de advertencia en la consola y en el archivo de log
@@ -180,7 +180,24 @@ func uploadFile(c *gin.Context) {
 			continue
 		}
 
-		// 32. Incrementar el contador de tiendas insertadas
+		// 32. En caso de éxito, insertar 12 pallets en la orden
+		for i := 0; i < 12; i++ {
+			// 32.1. Crear un nuevo pallet con el número de pallet y la orden
+			orderStorePallet := &OrderPallet{OrderStoreID: id, DispoID: i + 1, BigPallets: 0, LittlePallets: 0}
+			// 32.2. Crear el pallet en la base de datos
+			_, err := createOrderPallet(orderStorePallet)
+			// 32.3. Manejar el error si no se pudo crear el pallet
+			if err != nil {
+				// 32.3.1. Imprimir un mensaje de advertencia en la consola y en el archivo de log
+				fmt.Println("Error creating Order Store Pallet:", err)
+				// 32.3.2. Escribir un mensaje en el archivo de log
+				logger.Printf("Error creating Order Store Pallet: %s", err.Error())
+				// 32.3.3. return para cortar la ejecución de la función
+				continue
+			}
+		}
+
+		// 33. Incrementar el contador de tiendas insertadas
 		insertedStoresCount++ // Incrementar el contador de tiendas insertadas
 	}
 

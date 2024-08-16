@@ -13896,3 +13896,224 @@
 2024/08/12 00:34:13 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 91 AND DATE(date) = CURRENT_DATE;
 2024/08/12 00:34:14 Desde storeInsertedToday count: 0
 2024/08/12 00:34:14 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 49 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:14:33 Nueva inserción a las 2024-08-16 00:14:33.8173192 -0500 -05 m=+329.924814601
+2024/08/16 00:14:33 Error al obtener el archivo: request Content-Type isn't multipart/form-data
+2024/08/16 00:14:43 Nueva inserción a las 2024-08-16 00:14:43.7545585 -0500 -05 m=+339.862053901
+2024/08/16 00:14:44 Skipping row with empty reference and non-empty provider: [40000006 10000 0001 101  4500116924 5000123509 06-25-24 198 CJ VELAS BLANCAS UNIVERSALES X5 UND 10000012  TUTI BODEGA GQUIL NORTE]
+2024/08/16 00:14:44 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 107 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:14:44 Desde storeInsertedToday count: 0
+2024/08/16 00:14:44 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:45 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:45 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:45 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:45 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:45 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:45 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:45 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:45 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:45 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:45 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:45 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:46 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 101 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:14:46 Desde storeInsertedToday count: 0
+2024/08/16 00:14:46 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:46 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:46 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:46 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:46 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:46 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:47 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:47 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:47 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:47 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:47 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:47 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:47 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 99 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:14:47 Desde storeInsertedToday count: 0
+2024/08/16 00:14:48 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:48 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:48 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:48 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:48 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:48 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:48 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:48 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:48 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:49 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:49 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:49 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:49 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 72 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:14:49 Desde storeInsertedToday count: 0
+2024/08/16 00:14:49 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:49 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:49 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:50 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:50 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:50 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:50 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:50 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:50 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:50 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:50 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:50 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:50 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 100 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:14:51 Desde storeInsertedToday count: 0
+2024/08/16 00:14:51 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:51 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:51 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:51 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:51 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:51 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:51 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:52 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:52 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:52 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:52 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:52 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:52 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 27 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:14:52 Desde storeInsertedToday count: 0
+2024/08/16 00:14:53 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:53 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:53 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:53 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:53 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:53 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:53 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:53 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:53 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:53 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:53 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:54 Error creating Order Store Pallet: pq: column "small_pallets" of relation "order_pallet" does not exist
+2024/08/16 00:14:54 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 71 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:14:54 Desde storeInsertedToday count: 0
+2024/08/16 00:17:47 Nueva inserción a las 2024-08-16 00:17:47.6776661 -0500 -05 m=+12.855886601
+2024/08/16 00:17:48 Skipping row with empty reference and non-empty provider: [40000006 10000 0001 101  4500116924 5000123509 06-25-24 198 CJ VELAS BLANCAS UNIVERSALES X5 UND 10000012  TUTI BODEGA GQUIL NORTE]
+2024/08/16 00:17:48 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 107 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:17:48 Desde storeInsertedToday count: 0
+2024/08/16 00:17:51 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 101 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:17:51 Desde storeInsertedToday count: 0
+2024/08/16 00:17:53 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 99 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:17:54 Desde storeInsertedToday count: 0
+2024/08/16 00:17:56 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 72 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:17:56 Desde storeInsertedToday count: 0
+2024/08/16 00:17:59 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 100 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:17:59 Desde storeInsertedToday count: 0
+2024/08/16 00:18:01 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 27 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:18:01 Desde storeInsertedToday count: 0
+2024/08/16 00:18:04 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 71 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:18:04 Desde storeInsertedToday count: 0
+2024/08/16 00:18:07 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 55 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:18:07 Desde storeInsertedToday count: 0
+2024/08/16 00:18:09 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 39 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:18:09 Desde storeInsertedToday count: 0
+2024/08/16 00:18:12 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 37 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:18:12 Desde storeInsertedToday count: 0
+2024/08/16 00:18:15 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 38 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:18:15 Desde storeInsertedToday count: 0
+2024/08/16 00:18:17 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 61 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:18:17 Desde storeInsertedToday count: 0
+2024/08/16 00:18:20 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 111 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:18:20 Desde storeInsertedToday count: 0
+2024/08/16 00:18:22 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 109 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:18:23 Desde storeInsertedToday count: 0
+2024/08/16 00:18:25 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 57 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:18:25 Desde storeInsertedToday count: 0
+2024/08/16 00:18:28 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 49 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:18:28 Desde storeInsertedToday count: 0
+2024/08/16 00:18:30 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 83 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:18:31 Desde storeInsertedToday count: 0
+2024/08/16 00:18:33 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 53 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:18:33 Desde storeInsertedToday count: 0
+2024/08/16 00:18:36 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 115 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:18:36 Desde storeInsertedToday count: 0
+2024/08/16 00:18:38 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 110 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:18:38 Desde storeInsertedToday count: 0
+2024/08/16 00:18:41 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 117 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:18:41 Desde storeInsertedToday count: 0
+2024/08/16 00:18:44 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 44 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:18:44 Desde storeInsertedToday count: 0
+2024/08/16 00:18:46 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 54 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:18:46 Desde storeInsertedToday count: 0
+2024/08/16 00:18:49 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 1 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:18:49 Desde storeInsertedToday count: 0
+2024/08/16 00:18:52 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 89 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:18:52 Desde storeInsertedToday count: 0
+2024/08/16 00:18:54 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 42 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:18:54 Desde storeInsertedToday count: 0
+2024/08/16 00:18:57 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 46 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:18:57 Desde storeInsertedToday count: 0
+2024/08/16 00:19:00 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 5 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:19:00 Desde storeInsertedToday count: 0
+2024/08/16 00:19:03 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 69 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:19:03 Desde storeInsertedToday count: 0
+2024/08/16 00:19:05 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 134 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:19:06 Desde storeInsertedToday count: 0
+2024/08/16 00:19:08 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 79 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:19:08 Desde storeInsertedToday count: 0
+2024/08/16 00:19:11 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 131 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:19:11 Desde storeInsertedToday count: 0
+2024/08/16 00:19:13 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 56 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:19:14 Desde storeInsertedToday count: 0
+2024/08/16 00:19:16 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 105 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:19:16 Desde storeInsertedToday count: 0
+2024/08/16 00:19:19 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 125 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:19:19 Desde storeInsertedToday count: 0
+2024/08/16 00:19:21 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 112 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:19:22 Desde storeInsertedToday count: 0
+2024/08/16 00:19:24 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 87 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:19:24 Desde storeInsertedToday count: 0
+2024/08/16 00:19:27 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 55 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:19:27 Desde storeInsertedToday count: 1
+2024/08/16 00:19:27 Skipping store already inserted today: 55
+2024/08/16 00:19:27 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 39 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:19:27 Desde storeInsertedToday count: 1
+2024/08/16 00:19:27 Skipping store already inserted today: 39
+2024/08/16 00:19:28 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 37 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:19:28 Desde storeInsertedToday count: 1
+2024/08/16 00:19:28 Skipping store already inserted today: 37
+2024/08/16 00:19:28 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 116 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:19:28 Desde storeInsertedToday count: 0
+2024/08/16 00:19:31 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 38 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:19:31 Desde storeInsertedToday count: 1
+2024/08/16 00:19:31 Skipping store already inserted today: 38
+2024/08/16 00:19:31 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 61 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:19:31 Desde storeInsertedToday count: 1
+2024/08/16 00:19:31 Skipping store already inserted today: 61
+2024/08/16 00:19:31 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 111 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:19:31 Desde storeInsertedToday count: 1
+2024/08/16 00:19:31 Skipping store already inserted today: 111
+2024/08/16 00:19:32 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 109 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:19:32 Desde storeInsertedToday count: 1
+2024/08/16 00:19:32 Skipping store already inserted today: 109
+2024/08/16 00:19:32 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 67 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:19:32 Desde storeInsertedToday count: 0
+2024/08/16 00:19:35 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 57 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:19:35 Desde storeInsertedToday count: 1
+2024/08/16 00:19:35 Skipping store already inserted today: 57
+2024/08/16 00:19:35 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 49 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:19:35 Desde storeInsertedToday count: 1
+2024/08/16 00:19:35 Skipping store already inserted today: 49
+2024/08/16 00:19:35 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 83 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:19:36 Desde storeInsertedToday count: 1
+2024/08/16 00:19:36 Skipping store already inserted today: 83
+2024/08/16 00:19:36 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 53 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:19:36 Desde storeInsertedToday count: 1
+2024/08/16 00:19:36 Skipping store already inserted today: 53
+2024/08/16 00:19:36 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 115 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:19:36 Desde storeInsertedToday count: 1
+2024/08/16 00:19:36 Skipping store already inserted today: 115
+2024/08/16 00:19:36 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 110 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:19:37 Desde storeInsertedToday count: 1
+2024/08/16 00:19:37 Skipping store already inserted today: 110
+2024/08/16 00:19:37 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 117 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:19:37 Desde storeInsertedToday count: 1
+2024/08/16 00:19:37 Skipping store already inserted today: 117
+2024/08/16 00:19:37 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 43 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:19:37 Desde storeInsertedToday count: 0
+2024/08/16 00:19:40 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 124 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:19:40 Desde storeInsertedToday count: 0
+2024/08/16 00:19:42 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 44 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:19:43 Desde storeInsertedToday count: 1
+2024/08/16 00:19:43 Skipping store already inserted today: 44
+2024/08/16 00:19:43 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 45 AND DATE(date) = CURRENT_DATE;
+2024/08/16 00:19:43 Desde storeInsertedToday count: 0
