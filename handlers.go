@@ -142,6 +142,17 @@ func uploadFile(c *gin.Context) {
 			continue
 		}
 
+		// 24.1 Validar que row[8] (Unidad de medida) no sea "UN"
+
+		if strings.TrimSpace(row[8]) == "UN" {
+			// 24.1.1. Imprimir un mensaje de advertencia en la consola y en el archivo de log
+			fmt.Println("Skipping row with UN as unit of measure:", row)
+			// 24.1.2. Escribir un mensaje en el archivo de log
+			logger.Printf("Skipping row with UN as unit of measure: %v\n", row)
+			// 24.1.3. continue para cortar la ejecución de la función
+			continue
+		}
+
 		// 25. Obtener el código de la tienda de la columna 1 de la fila
 		storeCode := parseInt(row[1])
 		// 26. Obtener la tienda con el código obtenido

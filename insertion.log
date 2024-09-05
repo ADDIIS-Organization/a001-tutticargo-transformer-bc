@@ -14117,3 +14117,23 @@
 2024/08/16 00:19:43 Skipping store already inserted today: 44
 2024/08/16 00:19:43 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 45 AND DATE(date) = CURRENT_DATE;
 2024/08/16 00:19:43 Desde storeInsertedToday count: 0
+2024/09/05 11:41:01 Nueva inserción a las 2024-09-05 11:41:01.3525954 -0500 -05 m=+20.003185001
+2024/09/05 11:41:01 Skipping row with empty reference and non-empty provider: [40000006 10000 0001 101  4500116924 5000123509 06-25-24 198 CJ VELAS BLANCAS UNIVERSALES X5 UND 10000012  TUTI BODEGA GQUIL NORTE]
+2024/09/05 11:41:01 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 107 AND DATE(date) = CURRENT_DATE;
+2024/09/05 11:41:01 Desde storeInsertedToday count: 0
+2024/09/05 11:41:04 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 101 AND DATE(date) = CURRENT_DATE;
+2024/09/05 11:41:04 Desde storeInsertedToday count: 0
+2024/09/05 11:41:06 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 99 AND DATE(date) = CURRENT_DATE;
+2024/09/05 11:41:06 Desde storeInsertedToday count: 0
+2024/09/05 11:41:09 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 72 AND DATE(date) = CURRENT_DATE;
+2024/09/05 11:41:09 Desde storeInsertedToday count: 0
+2024/09/05 11:41:11 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 100 AND DATE(date) = CURRENT_DATE;
+2024/09/05 11:41:11 Desde storeInsertedToday count: 0
+2024/09/05 11:41:14 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 27 AND DATE(date) = CURRENT_DATE;
+2024/09/05 11:41:14 Desde storeInsertedToday count: 0
+2024/09/05 11:41:16 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 71 AND DATE(date) = CURRENT_DATE;
+2024/09/05 11:41:16 Desde storeInsertedToday count: 0
+2024/09/05 11:41:19 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 55 AND DATE(date) = CURRENT_DATE;
+2024/09/05 11:41:19 Desde storeInsertedToday count: 0
+2024/09/05 11:41:21 Query: SELECT COUNT(*) FROM order_store WHERE store_id = 39 AND DATE(date) = CURRENT_DATE;
+2024/09/05 11:41:21 Desde storeInsertedToday count: 0
